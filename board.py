@@ -15,10 +15,10 @@ class Board:
             ["bp0", "bp1", "bp2", "bp3", "bp4", "bp5", "bp6", "bp7"], #1
             [False, False, False, False, False, False, False, False], #2
             [False, False, False, False, False, False, False, False], #3
-            [False, False, False, False, False, False, False, False], #4
-            [False, False, False, False, False, False, "bp6", False], #5
+            [False, False, False, "wr1", False, False, False, False], #4
+            [False, False, False, False, False, False, False, False], #5
             ["wp0", "wp1", "wp2", "wp3", "wp4", "wp5", "wp6", "wp7"], #6
-            ["wr1", "wn1", "wb1", "wk", "wq", "wb2", "wn2", "wr2"],  # 0
+            [False, "wn1", "wb1", "wk", "wq", "wb2", "wn2", "wr2"],  # 0
         ]
 
         self.removedPiece = [],
@@ -51,7 +51,7 @@ class Board:
             return
 
         piece = Piece(self.board, self.selectedPiece)
-        print(piece.pawn())
+        print(piece.rook())
         return
 
     def move(self, toX, toY):
