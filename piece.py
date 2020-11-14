@@ -1,17 +1,23 @@
 class Piece:
     board = []
     selectedPiece = []
-    moves = [] # moves that piece can make
 
-    def __init__(self, board, selectedPiece):
+    def __init__(self, board, selectedPiece, side = False):
         self.board = board
         self.selectedPiece = selectedPiece
-        self.piece = board[selectedPiece[0]][selectedPiece[1]]
+        self.piece = self.board[selectedPiece[0]][selectedPiece[1]]
         self.white = (self.piece[0] == 'w')
         self.color = ("w" if self.white else "b")
 
+    # def setSelectedPiece(self, selectedPiece):
+    #
+    #
+    #     return self
+
     # returns all moves from selected piece is pawn
     def pawn(self):
+        moves = []
+
         # case for white or black
         white = (self.piece[0] == 'w')
         color = ("w" if white else "b")
@@ -27,31 +33,32 @@ class Piece:
         blocked = True # boolean for if path is blocked
         if (firstSpacePiece == False) and (str(firstSpacePiece)[0] != color):
             blocked = False
-            self.moves += [firstSpace]
+            moves += [firstSpace]
 
         # case for second space move by checking if selectedPiece is on starting line and
         if blocked == False and ((white and self.selectedPiece[0] == 6) or (white == False and self.selectedPiece[0] == 1)):
             # is not blocked and is on print first line
-            self.moves += [[self.selectedPiece[0] + (-2 if white else 2), self.selectedPiece[1]]]
+            moves += [[self.selectedPiece[0] + (-2 if white else 2), self.selectedPiece[1]]]
 
         # check left attach
         if self.selectedPiece[1] - 1 >= 0:
             leftAttactPiece = self.board[leftAttack[0]][leftAttack[1]]
             if (leftAttactPiece != False) and (str(leftAttactPiece)[0] != color):
-                self.moves += [leftAttack]
+                moves += [leftAttack]
 
         # check right attach
         if self.selectedPiece[1] + 1 <= 7:
             rightAttactPiece = self.board[rightAttack[0]][rightAttack[1]]
             if (rightAttactPiece != False) and (str(rightAttactPiece)[0] != color):
-                self.moves += [rightAttack]
+                moves += [rightAttack]
 
-        return self.moves
+        return moves
 
     # returns all moves from selected piece is rook
     def rook(self):
 
         # return self.board[self.selectedPiece[0] - -3][self.selectedPiece[1] - -9]
+        moves = []
 
         for i in range(4):
             Ycheck = [-1, 0, 0, 1][i]
@@ -78,20 +85,22 @@ class Piece:
 
                         # checking space is empty
                         if (spaceChecking == False):
-                            self.moves += move
+                            moves += move
                             Ycheck += addY
                             Xcheck += addX
 
                         else:  # hit a piece
                             # attack case
                             if ((str(spaceChecking)[0] != ("w" if self.white else "b"))):
-                                self.moves += move
+                                moves += move
                             spaceChecking = True  # stop checking
 
-        return self.moves
+        return moves
 
     # returns all moves from selected piece is knight
     def knight(self):
+
+        moves = []
 
         for i in range(8):
             firstVal = 2 if (i >= 4) else 1
@@ -108,12 +117,14 @@ class Piece:
 
                 # check if move is in the rules of the game
                 if (piece == False) or (str(piece)[0] == ("b" if self.white else "w") ):
-                    self.moves += [move]
+                    moves += [move]
 
-        return self.moves
+        return moves
 
     # returns all moves from selected piece is bishop
     def bishop(self):
+
+        moves = []
 
         # check all 4 diagonal directions
         for i in range(4):
@@ -146,11 +157,11 @@ class Piece:
 
                     # empty space case
                     if (piece == False):
-                        self.moves += [move]
+                        moves += [move]
 
                     # attack case
                     if str(piece)[0] == ("b" if self.white else "w"):
-                        self.moves += [move]
+                        moves += [move]
                         spaceChecking = True
 
                     # friendly case
@@ -161,13 +172,30 @@ class Piece:
                     jump1 += 1
                     jump2 += 1
 
-        return self.moves
+        return moves
 
+    # returns all moves from selected piece is bishop
     def queen(self):
-        pass
+        return self.rook() + self.bishop()
 
     def king(self):
-        pass
+        return []
 
-    # def getAllMovesForSide(self, side):
-    #     pass
+    # calls right method for piece
+    def getMoves(self):
+        if self.piece[1] == "p":
+            return self.pawn()
+        if self.piece[1] == "r":
+            return self.rook()
+        if self.piece[1] == "n":
+            return self.knight()
+        if self.piece[1] == "b":
+            return self.bishop()
+        if self.piece[1] == "q":
+            return self.queen()
+        if self.piece[1] == "k":
+            return self.king()
+
+
+    def getAllMoves(self):
+        pass

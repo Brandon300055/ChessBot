@@ -8,19 +8,8 @@ class Board:
     selectedPiece = False
     selectPieceName = False
 
-    def __init__(self):
-        self.board = [
-            #  0    #  1   # 2    # 3    # 4   # 5    # 6    # 7
-            ["br1", "bn1", "bb1", "bk",  "bq", "bb2", "bn2", "br2"],  # 0
-            ["bp0", "bp1", "bp2", "bp3", "bp4", "bp5", "bp6", "bp7"], # 1
-            [False, False, False, False, False, False, False, False], # 2
-            [False, False, False, False, False, False, False, False], # 3
-            [False, False, False, False, False, False, False, False], # 4
-            [False, False, False, False, False, False, False, False], # 5
-            ["wp0", "wp1", "wp2", "wp3", "wp4", "wp5", "wp6", "wp7"], # 6
-            ["wr1", "wn1", "wb1", "wk",  "wq",  "wb2", "wn2", "wr2"],   # 7
-        ]
-
+    def __init__(self, board):
+        self.board = board
         self.removedPiece = [],
 
     def printBoard(self):
@@ -43,7 +32,7 @@ class Board:
         self.selectedPiece = False
         return self # case for if piece not found
 
-    # returns list for all possible moves for piece
+    # get moves for selected piece
     def moves(self):
         # case for if no piece is select
         if self.selectedPiece == False:
@@ -51,17 +40,45 @@ class Board:
             return
 
         piece = Piece(self.board, self.selectedPiece)
-        print(piece.bishop())
-        return
+        # print(piece.getMoves())
+        return piece.getMoves()
 
+    # updates board with select piece
     def move(self, toX, toY):
         # case for if no piece is select
         if self.selectedPiece == False:
             print("No Piece Select")
             return
 
+        # check if move is available
+
+
         # move the piece
         self.board[toX][toY] = self.board[self.selectedPiece[0]][self.selectedPiece[1]]
         self.board[self.selectedPiece[0]][self.selectedPiece[1]] = False
 
+    # returns list for all possible moves for piece
+    def getAllMoves(self, color):
+        x = 0
+        y = 0
+        movesPerPiece = []
+        for i in self.board:
+            for j in i:
+                if str(self.board[x][y])[0] == color:
+                    self.selectedPiece = [x, y] # return the coordinates
+                    board = self.board
+                    selectedPiece = self.selectedPiece
+                    piece = Piece(board, selectedPiece)
+                    moves = piece.getMoves()
+                    movesPerPiece += [[str(self.board[x][y]), moves]]
+                y += 1
+            y = 0
+            x += 1
+        self.selectedPiece = False
 
+        return movesPerPiece
+
+    # def getMove
+    #
+    # def recursion(self):
+    #     pass
