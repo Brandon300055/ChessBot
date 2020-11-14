@@ -11,14 +11,14 @@ class Board:
     def __init__(self):
         self.board = [
             #  0    #  1   # 2    # 3    # 4   # 5    # 6    # 7
-            ["br1", "bn1", "bb1", "bk",  "bq", "bb2", "bn2", "br2"],   #0
-            ["bp0", "bp1", "bp2", "bp3", "bp4", "bp5", "bp6", "bp7"], #1
-            [False, False, False, False, False, False, False, False], #2
-            [False, False, False, False, False, False, False, False], #3
-            [False, False, False, "wr1", False, False, False, False], #4
-            [False, False, False, False, False, False, False, False], #5
-            ["wp0", "wp1", "wp2", "wp3", "wp4", "wp5", "wp6", "wp7"], #6
-            [False, "wn1", "wb1", "wk", "wq", "wb2", "wn2", "wr2"],  # 0
+            ["br1", "bn1", "bb1", "bk",  "bq", "bb2", "bn2", "br2"],  # 0
+            ["bp0", "bp1", "bp2", "bp3", "bp4", "bp5", "bp6", "bp7"], # 1
+            [False, False, False, False, False, False, False, False], # 2
+            [False, False, False, False, False, False, False, False], # 3
+            [False, False, False, False, False, False, False, False], # 4
+            [False, False, False, False, False, False, False, False], # 5
+            ["wp0", "wp1", "wp2", "wp3", "wp4", "wp5", "wp6", "wp7"], # 6
+            ["wr1", "wn1", "wb1", "wk",  "wq",  "wb2", "wn2", "wr2"],   # 7
         ]
 
         self.removedPiece = [],
@@ -51,7 +51,7 @@ class Board:
             return
 
         piece = Piece(self.board, self.selectedPiece)
-        print(piece.rook())
+        print(piece.bishop())
         return
 
     def move(self, toX, toY):
@@ -63,4 +63,5 @@ class Board:
         # move the piece
         self.board[toX][toY] = self.board[self.selectedPiece[0]][self.selectedPiece[1]]
         self.board[self.selectedPiece[0]][self.selectedPiece[1]] = False
+
 

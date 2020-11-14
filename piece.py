@@ -8,7 +8,7 @@ class Piece:
         self.selectedPiece = selectedPiece
         self.piece = board[selectedPiece[0]][selectedPiece[1]]
         self.white = (self.piece[0] == 'w')
-        self.color = ("w" if  self.white else "b")
+        self.color = ("w" if self.white else "b")
 
     # returns all moves from selected piece is pawn
     def pawn(self):
@@ -58,34 +58,116 @@ class Piece:
             Xcheck = [0, -1, 1, 0][i]
             addY = [-1, 0, 0, 1][i]
             addX = [0, -1, 1, 0][i]
+            if (self.selectedPiece[0] - Ycheck) <= 0 or (self.selectedPiece[0] - Ycheck) > 7 or (
+                    self.selectedPiece[1] - Xcheck) <= 0 or (self.selectedPiece[1] - Xcheck) > 7:
+                spaceChecking = True
+            else:
+                spaceChecking = self.board[self.selectedPiece[0] - Ycheck][self.selectedPiece[1] - Xcheck]
 
-            spaceChecking = self.board[self.selectedPiece[0] - Ycheck][self.selectedPiece[1] - Xcheck]
+                while (spaceChecking == False):
 
-            # print(1 - ((i + 1) % 2))
-            # print(1 - (i % 2))
-            # print( ((i ) % 3))
-            # print (self.selectedPiece[0] - Ycheck)
+                    # check if in range of board
+                    if (self.selectedPiece[0] - Ycheck) < 0 or (self.selectedPiece[0] - Ycheck) > 7 or (
+                            self.selectedPiece[1] - Xcheck) < 0 or (self.selectedPiece[1] - Xcheck) > 7:
+                        spaceChecking = True
+                    else:
 
-            while (spaceChecking == False):
-                # set definitions
-                move = [[self.selectedPiece[0] - Ycheck, self.selectedPiece[1] - Xcheck]]
+                     # set definitions
+                        move = [[self.selectedPiece[0] - Ycheck, self.selectedPiece[1] - Xcheck]]
+                        spaceChecking = self.board[self.selectedPiece[0] - Ycheck][self.selectedPiece[1] - Xcheck]
 
-                # check if in range of board
-                if (self.selectedPiece[0] - Ycheck) < 0 or (self.selectedPiece[0] - Ycheck) > 7 or (self.selectedPiece[1] - Xcheck) < 0 or (self.selectedPiece[1] - Xcheck) > 7:
-                    spaceChecking = True
-                else:
-                    spaceChecking = self.board[self.selectedPiece[0] - Ycheck][self.selectedPiece[1] - Xcheck]
-
-                    # checking space is empty
-                    if (spaceChecking == False):
-                        self.moves += move
-                        Ycheck += addY
-                        Xcheck += addX
-
-                    else:  # hit a piece
-                        # attack case
-                        if ((str(spaceChecking)[0] != ("w" if self.white else "b"))):
+                        # checking space is empty
+                        if (spaceChecking == False):
                             self.moves += move
-                        spaceChecking = True  # stop checking
+                            Ycheck += addY
+                            Xcheck += addX
+
+                        else:  # hit a piece
+                            # attack case
+                            if ((str(spaceChecking)[0] != ("w" if self.white else "b"))):
+                                self.moves += move
+                            spaceChecking = True  # stop checking
 
         return self.moves
+
+    # returns all moves from selected piece is knight
+    def knight(self):
+
+        for i in range(8):
+            firstVal = 2 if (i >= 4) else 1
+            secondVal = 1 if (i >= 4) else 2
+            firstSign = "-" if (i % 4) == 2 or (i % 4) == 3 else "+"
+            secondSign = "+" if (i % 2) else "-"
+
+            jump = [int(firstSign + str(firstVal)), int(secondSign + str(secondVal))]
+            move = [self.selectedPiece[0] + jump[0], self.selectedPiece[1] + jump[1]]
+
+            # check if move is on the board
+            if(move[0] >= 0 ) and (move[1] >= 0 ) and (move[0] <= 7 ) and (move[1] <= 7 ):
+                piece = self.board[move[0]][move[1]] # get the piece
+
+                # check if move is in the rules of the game
+                if (piece == False) or (str(piece)[0] == ("b" if self.white else "w") ):
+                    self.moves += [move]
+
+        return self.moves
+
+    # returns all moves from selected piece is bishop
+    def bishop(self):
+
+        # check all 4 diagonal directions
+        for i in range(4):
+            sign1 = "-" if (i >= 2) else "+"
+            sign2 = "-" if (i % 2) else "+"
+
+            # jump1 = int(sign1 + str(1))
+            # jump2 = int(sign2 + str(1))
+
+            jump1 = 1
+            jump2 = 1
+
+            spaceChecking = False
+
+            # print([jump1, jump2])
+
+            while (spaceChecking == False):
+                jump = ([int(sign1 + str(jump1)), int(sign2 + str(jump2))])
+                move = [self.selectedPiece[0] + jump[0], self.selectedPiece[1] + jump[1]]
+
+                # print([int(sign1 + str(jump1)), int(sign2 + str(jump2))])
+
+
+
+                # check if move is on the board
+                if(move[0] < 0 ) or (move[1] < 0 ) or (move[0] > 7 ) or (move[1] > 7 ):
+                    spaceChecking = True
+                else:
+                    piece = self.board[move[0]][move[1]] # get the piece
+
+                    # empty space case
+                    if (piece == False):
+                        self.moves += [move]
+
+                    # attack case
+                    if str(piece)[0] == ("b" if self.white else "w"):
+                        self.moves += [move]
+                        spaceChecking = True
+
+                    # friendly case
+                    if str(piece)[0] == ("w" if self.white else "b"):
+                        spaceChecking = True
+
+                    # increment jump
+                    jump1 += 1
+                    jump2 += 1
+
+        return self.moves
+
+    def queen(self):
+        pass
+
+    def king(self):
+        pass
+
+    # def getAllMovesForSide(self, side):
+    #     pass
