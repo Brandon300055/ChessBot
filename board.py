@@ -12,6 +12,16 @@ class Board:
         self.board = board
         self.removedPiece = [],
 
+    #  board setter
+    def setBoard(self, board):
+        self.board = board
+        return self
+
+    #  piece setter
+    def setSelectedPiece(self, selectedPiece):
+        self.selectedPiece = selectedPiece
+        return self
+
     def printBoard(self):
         for i in self.board:
             print(i)
