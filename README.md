@@ -1,2 +1,2 @@
 # ChessBot
-I making a bot that can bet me in chess
+I'm making a bot that can beat me in chess
