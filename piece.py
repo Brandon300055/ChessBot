@@ -35,10 +35,16 @@ class Piece:
             blocked = False
             moves += [firstSpace]
 
-        # case for second space move by checking if selectedPiece is on starting line and
-        if blocked == False and ((white and self.selectedPiece[0] == 6) or (white == False and self.selectedPiece[0] == 1)):
-            # is not blocked and is on print first line
-            moves += [[self.selectedPiece[0] + (-2 if white else 2), self.selectedPiece[1]]]
+            # case for second space move
+            secondSpace = [self.selectedPiece[0] + (-2 if white else 2), self.selectedPiece[1]]
+            secondPiece = self.board[secondSpace[0]][secondSpace[1]]
+            if secondPiece == False and ((white and self.selectedPiece[0] == 6) or (white == False and self.selectedPiece[0] == 1)):
+                moves += [secondSpace]
+
+        # # case for second space move by checking if selectedPiece is on starting line and
+        # if blocked == False and ((white and self.selectedPiece[0] == 6) or (white == False and self.selectedPiece[0] == 1)):
+        #     # is not blocked and is on print first line
+        #     moves += [[self.selectedPiece[0] + (-2 if white else 2), self.selectedPiece[1]]]
 
         # check left attach
         if self.selectedPiece[1] - 1 >= 0:
