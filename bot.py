@@ -8,16 +8,20 @@ sys.setrecursionlimit(iMaxStackSize)
 
 class Bot:
 
-    def __init__(self, board, botColor = "b", whiteScore=0, blackScore=0, level=0, movesList = []):
+    def __init__(self, board, color="b", whiteScore=0, blackScore=0, level=0, movesList = [], botColor = "b", ):
         self.board = board[:]
         self.setBoard = board[:]
 
+        self.color = color
         self.botColor = botColor
+
 
         # score tracker
         self.whiteScore = whiteScore
         self.blackScore = blackScore
         self.level = level
+
+        self.movesList=[]
 
     # the weighted bias for each piece
     def attackWeight(self, moveSpace):
@@ -49,7 +53,7 @@ class Bot:
         x = 0
         y = 0
         movesPerPiece = []
-        scoreList = []
+        weightList = [0]
 
         # search over all board
         for i in board:
@@ -58,7 +62,7 @@ class Bot:
                 piece = board[x][y]
 
                 # check side case
-                if str(piece)[0] == self.botColor:
+                if str(piece)[0] == self.color:
 
                     # set selectedPiece
                     selectedPiece = [x, y]
@@ -87,40 +91,47 @@ class Bot:
                         # the move space
                         moveSpace = board[move[0]][move[1]]
 
+                        whiteScore = 0
+                        blackScore = 0
                         # weight score
+
                         weightScore = 0
                         if moveSpace != False:
                             weightScore = self.attackWeight(moveSpace)
 
+                            whiteScore = (weightScore if self.color == "w" else 0) + self.whiteScore
+                            blackScore = (0 if self.color == "w" else weightScore) + self.blackScore
 
                         # make the move
                         board[move[0]][move[1]] = str(piece)
                         board[x][y] = False # clear the old space
 
-                        # boardR = copy.deepcopy(board)
-
-                        # go one leve deeper with recursion
-                        # board, botColor = "b", whiteScore = 0, blackScore = 0, level = 0, movesList = []):
-
-                        level = self.level + 1
-                        # print("level:" + str(level) )
-
                         # if  >= the max level depth go one leve deeper
+                        if self.level < 2:
 
-                        weightScore = 0
-                        if self.level < 1:
-                            newBot = Bot(board, self.botColor, 0, 0, level, [])
-                            weightScore += newBot.findMove();
+                            # go one leve deeper with recursion
+                            newBot = Bot(
+                                board,
+                                ("b" if self.color == "w" else "w"), # color
+                                whiteScore, # whiteScore
+                                blackScore, # blackScore
+                                self.level + 1, # level
+                                []
+                            )
+                            scoreTest = newBot.findMove()
+                            weightScore = [scoreTest[0] + whiteScore, scoreTest[1] + blackScore]
+                            weightList.append(weightScore)
+                            # print(weightList)
+
 
                         if self.level == 0:
-                            # scoreList += weightScore
-
                             print("-------------" + piece + ":"  + str(move) + "-------------")
                             print("Total attack Weight:")
-                            print(weightScore)
+                            print(str(whiteScore - blackScore) )
+                            # print("blackScore: " + str(blackScore))
 
-                        if self.level == 1:
-                            return weightScore
+                        # if self.level == 1:
+                        #     return weightScore
 
                         # print board
                         # for i in board:
@@ -146,6 +157,22 @@ class Bot:
                 y += 1
             y = 0
             x += 1
+
+        # if self.level != 0:
+        largestLoss = 0
+        keyForLargestLoss = 0
+        for i in range(len(weightList)):
+
+            loss = weightList[i][0] - weightList[i][1]
+
+            if (loss > largestLoss):
+                largestLoss = loss
+                keyForLargestLoss = i
+
+
+        return weightList[keyForLargestLoss]
+
+
         # self.selectedPiece = False
 
         # print (movesPerPiece)
